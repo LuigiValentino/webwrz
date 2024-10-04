@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebWizard</title>
+    <link rel="shortcut icon" href="hat-wizard-svgrepo-com.svg" type="image/x-icon">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/dracula.min.css">
+</head>
+<body class="bg-gray-900 text-white">
+    <div class="container mx-auto p-4">
+        <div class="flex justify-between items-center mb-4">
+            <h1 class="text-3xl font-bold">WebWizard <i class="fa-solid fa-hat-wizard"></i></h1> 
+            
+            <div class="space-x-4">
+                <button id="saveBtn" class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded">
+                    <i class="fas fa-save"></i> Guardar
+                </button>
+                <button id="loadBtn" class="text-white font-bold py-2 px-4 rounded">
+                    <i class="fas fa-folder-open"></i> Cargar
+                </button>
+                <button id="templateBtn" class="  text-white font-bold py-2 px-4 rounded">
+                    <i class="fas fa-file-code"></i> Plantillas
+                </button>
+                <button id="saveTemplateBtn" class="  text-white font-bold py-2 px-4 rounded">
+                    <i class="fas fa-save"></i> Guardar Plantilla
+                </button>
+                <button id="exportBtn" class=" text-white font-bold py-2 px-4 rounded">
+                    <i class="fas fa-file-export"></i> Exportar
+                </button>
+                <button id="shareBtn" class=" text-white font-bold py-2 px-4 rounded">
+                    <i class="fas fa-share"></i> Compartir
+                </button>
+            </div>
+        </div>
+        <hr class="border-white mt-5">
+        <br>
+        <div class="grid grid-cols-3 gap-4">
+            <div>
+                <h2 class="text-xl mb-2">HTML</h2>
+                <textarea id="html-code" class="w-full h-64 p-2 bg-gray-800 text-white rounded"></textarea>
+            </div>
+            <div>
+                <h2 class="text-xl mb-2">CSS</h2>
+                <textarea id="css-code" class="w-full h-64 p-2 bg-gray-800 text-white rounded"></textarea>
+            </div>
+            <div>
+                <h2 class="text-xl mb-2">JavaScript</h2>
+                <textarea id="js-code" class="w-full h-64 p-2 bg-gray-800 text-white rounded"></textarea>
+            </div>
+        </div>
+        <div class="mt-4">
+            <h2 class="text-xl mb-2">Salida</h2>
+            <iframe id="iFrame" class="w-full h-64 bg-white rounded"></iframe>
+        </div>
+        <hr class="border-white mt-5">
+        <div class="mt-1 p-4">
+            <h2 class="text-xl mb-2 p-4">Acerca de WebWizard</h2>
+            <p class="pl-5">
+                WebWizard es una plataforma versátil diseñada para ayudarte a crear y experimentar con código HTML, CSS y JavaScript de manera intuitiva y eficiente.
+                Con WebWizard, puedes explorar una amplia gama de funcionalidades, desde el uso de diferentes fuentes y bibliotecas de CDN hasta la implementación de funciones complejas de JavaScript.
+                Ya sea que estés diseñando una página web simple o trabajando en un proyecto más avanzado, WebWizard te brinda las herramientas necesarias para dar vida a tus ideas y crear experiencias web únicas y atractivas.
+                ¡Únete a nuestra comunidad y comienza a construir tus proyectos hoy mismo con WebWizard!
+            </p>
+        </div>        
+    </div>
+    <div id="templateModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-white text-black p-4 rounded w-96">
+            <h2 class="text-xl mb-2">Selecciona una Plantilla</h2>
+            <div class="space-y-2">
+                <button class="template-option bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded" data-template="basic">Básica</button>
+                <button class="template-option bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded" data-template="bootstrap">Bootstrap</button>
+                <button class="template-option bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded" data-template="vue">Vue.js</button>
+                <button class="template-option bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded" data-template="tailwind">TailwindCSS</button>
+                <button class="template-option bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded" data-template="react">React</button>
+            </div>
+            <div id="customTemplates" class="space-y-2 mt-4"></div>
+            <button id="closeTemplateModal" class="mt-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Cerrar</button>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/xml/xml.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/css/css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/htmlmixed/htmlmixed.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/jsx/jsx.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/dracula.min.js"></script>
+    <script src="editor.js"></script>
+        <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.template-option').forEach(button => {
+                button.addEventListener('click', function() {
+                    const templateName = this.dataset.template;
+                    const selectedTemplate = templates[templateName];
+                    if (selectedTemplate) {
+                        htmlTextArea.setValue(selectedTemplate.html);
+                        cssTextArea.setValue(selectedTemplate.css);
+                        jsTextArea.setValue(selectedTemplate.js);
+                        updatePreview();
+                        templateModal.classList.add('hidden');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
